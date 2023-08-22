@@ -1,0 +1,281 @@
+                                  2014년 한국컴퓨터종합학술대회 논문집
+
+
+                                 ⮈⯜⫠ 䑀㢰 㐐㏘䊐㡸 ⸨㝸䚌⏈
+                                  㢨㵜 㤴㣙㣙㾌 I/O㢌 ⺸㉑
+                                                     O
+                                             㙼㨴㟥 , ὴ䜸㨴, 䚐䞌㍌
+                                           ㉥ἔḴ␴䚍Ẅ 㥉⸨䋩㐔␴䚍
+                                      {ajw1507, hjunkim, hhan}@skku.edu
+
+                          Analyzing Supplement Secondary Storage I/O
+                                for Memory-Based File Systems
+                                                 O
+                                  Joonwook Ahn , Hyunjun Kim, Hwansoo Han
+               College of Information and Communication Engineering, Sungkyunkwan University
+
+                                                         㟈   㚱
+           䀨䘜䉤 㐐㏘䊐㡴 㩅㚍㷌⫠㣙㾌, 䡌ⵐ㉥㢬 ⮈㢬 ⮈⯜⫠, ⽸ 䡌ⵐ㉥㢬 2㵜 㤴㣙㣙㾌㢌 Ạ㦤⪰ ㍌≸ᴸ 㡔
+          㫴䚌Ḕ 㢼␘. 䚌㫴⬀ 㺐ἰ ⮈㢬 ⮈⯜⫠⦐ ㇠㟝㩅㢬 DRAM㢨 㬅㤵 䚐᷸㜄 ⓸␠䚌Ḕ ㇼ⦐㟨 ㋀㣄ᴴ ᵐⵐ
+          ╜㜄 ♤⢰ ㇼ⦐㟨 ⽸ 䡌ⵐ㉥ ⮈⯜⫠ ㋀㣄⪰ ⮈㢬 ⮈⯜⫠⦐ 䚌Ḕ㣄 䚌⏈ 㜤Ạᴴ 㫸䚽╌Ḕ 㢼␘. 㢨⤠䚐
+          㜤Ạ㢌 㢰䞌㡰⦐ ⮈⯜⫠ 䑀㢰㐐㏘䊐㜄 ␴䚐 㜤Ạᴴ ⬂㢨 㢼␘. ⸬ ⊰ⱬ㜄㉐⏈ ⮈⯜⫠ 䑀㢰 㐐㏘䊐㡸 ㇠
+          㟝䚔 ⚀ ⮈⯜⫠ ⺴㦥㡰⦐ 㢬䚐 2㵜 㤴㣙㣙㾌⦐㢌 ㏘㞅 Ḱ㥉㜄㉐ ⵐ㈑䚌⏈ I/O⪰ ⺸㉑䚌㜠 ⺼䙸㟈䚐 㝘ⶸ
+          䜘☐⪰ 䞉㢬 ⵃ ᵐ㉔ⵝ䛙㡸 㥐㐐䚌㜴␘.
+
+
+1. ㉐ ⦔                                                       ❄䚐 ⮈⯜⫠㝴 2㵜 㤴㣙㣙㾌 ㇠㢨㜄㉐ 䑀㢰㢌 㐔⧤㉥㡸
+                                                             ⸨㣙䚌ὤ 㠸䚐 ὤⷉ㡸 㤵㟝䚌㜠 ㉥⏙㡸 㤴䚌㐐䇜␘.
+ 䀨䘜䉤 ㋀㣄⏈ 㺐ἰ ㍌㐡 ≸ᴸ Ἵᷝ䚐 ⵐ㤸㡸 ᶤ☡䚨                                ⵌ⮨, ⮈⯜⫠ 䑀㢰 㐐㏘䊐㡴 2㵜 㤴㣙㣙㾌 I/O⦐ 㢬䚐
+㞈Ḕ, 䜸㣠㢌 㩅㚍㷌⫠㣙㾌, 㿄㐐, ⮈㢬 ⮈⯜⫠, 2㵜                               ㉥⏙㤴䚌ᴴ 㛺Ḕ, 2㵜 㤴㣙㣙㾌㝴 ⮈⯜⫠ ㇠㢨㢌
+㤴㣙㣙㾌㢌 Ạ㦤⪰ ㍌≸ᴸ 㡔㫴䚌Ḕ 㢼␘. 䜸㣠 ⮈㢬                                 㐔⧤㉥㡸 Ḕ⥘ 䚌㫴 㙾㙸⓸ ╌㛨 ㉥⏙㢨 ⬘㟤 ⠤㛨⇌␘.
+⮈⯜⫠⦐ ㇠㟝㩅㢬 DRAM㡴 ⬘㟤 ⾔⪬ 㢱ὤ/㘤ὤ                                  䚌㫴⬀ ⮈⯜⫠ᴴ 䑀㢰 㐐㏘䊐㢌 㣄⨀⪰ ⸨Ḵ䚔 ⬀䆰
+㉥⏙㡸 ⸨㢨㫴⬀, 䡌ⵐ㉥㢌 䏭㉥㡰⦐ 㢬䚨 ⒤㢨䉤⪰                                  㻝⺸䚐 㟝⣽㡸 㫴㠄䚌ὤ⏈ 㛨⥘㟤⮤, 㢨⪰ 㠸䚨 2㵜
+⸨㦨 䚔 ㍌ 㛺㛨㉐ HDD⇌ SSD㝴 ᵍ㡴 2㵜 㤴㣙㣙㾌⪰                             㤴㣙㣙㾌⦐㢌      䞉㣙㢨  䙸㟈⦐  䚌␘.  㢨⏈   2㵜
+䙸㟈⦐ 䚐␘. 䚌㫴⬀ DRAM㢌 ᵐⵐ㢨 㬅㤵 䚐᷸㜄                                 㤴㣙㣙㾌㜄 ⒤㢨䉤㢌 㠄⸬㡸 ▄Ḕ ┍ὤ䞈⪰ 䙸㟈⦐
+⓸␠䚌㜴Ḕ, 㢨㜄 ♤⪬ ␴㷨 ㋀㣄㢌 ᵐⵐ㢨 䞐ⵐ䢼                                  䚌⏈ ὤ㦨㢌 䑀㢰 㐐㏘䊐Ḱ⏈ ␘⪨⮤, 㟨㜵㷨㥐㢌
+㫸䚽╌Ḕ 㢼␘. 㫴Ἴᾀ㫴 ᵐⵐ═ ⽸ 䡌ⵐ㉥ ⮈⯜⫠                                  ㏘㞅Ḱ ᵍ㡴 ὤⷉ㡸 䋩䚨 2㵜 㤴㣙㣙㾌⦐㢌 䞉㣙㢨
+㋀㣄⏈ DRAM㜄 ⽸䚨 ㉥⏙㢨 㙼 㦿㚌㡰⇌ ㇼ⦡᷀                                  ᴴ⏙䚌␘.
+ᵐⵐ╌⏈ STT-MRAMḰ ᵍ㡴 ㋀㣄⏈ DRAM㢌 ㉥⏙㜄                                䚌㫴⬀ 㢨⦐ 㢬䚨 ⵐ㈑䚌⏈ 2㵜 㤴㣙㣙㾌 I/O⏈ 䑀㢰
+ἰ㥅䚔 ᶷ㡰⦐ 㜼ㇵ═␘[1].                                             㐐㏘䊐㢌 ㉥⏙ 㤴䚌⪰ ⵐ㈑ 㐐䇜␘. ♤⢰㉐, ⸬
+ ㇼ⦡᷀ ᵐⵐ═ ⽸ 䡌ⵐ㉥ ⮈⯜⫠⪰ 䀨䘜䉤㜄                                     ⊰ⱬ㜄㉐⏈ ⮈⯜⫠ 䑀㢰 㐐㏘䊐㜄㉐ ㏘㞅㢨 ⵐ㈑䚔 ⚀
+㤵㟝䚌Ḕ㣄 䚌⏈ 㜤Ạᴴ 㫸䚽 㩅㜄 㢼㡰⮤[2], 㢨㜄                                ㈑ὤ⏈ ㉥⏙ 㤴䚌 㟈㢬㡸 䞉㢬䚌Ḕ 㢨⪰ ᵐ㉔䚔 ⵝⷉ㡸
+♤⪬ 䀨䘜䉤 㐐㏘䊐㜄 ⬂㡴 ⷴ䞈ᴴ 㢼㡸 ᶷ㡰⦐                                    㵲Ḕ㣄 䚌㜴␘. 㢨⪰ 㠸䚨 ⫼㢨䆠⦐ ⷘ㾌⫼䆠㢬
+㜼ㇵ═␘. Ἤ 㩅 䏭䢼 ⮈⯜⫠㢌 ⽸ 䡌ⵐ㉥ 䏭㬉㡸                                  IOzone[9]㡸  ┍㣅䚌㜠  ⮈⯜⫠   䑀㢰  㐐㏘䊐㢬
+㢨㟝䚐 ⮈⯜⫠ 䑀㢰 㐐㏘䊐㜄 ␴䚐 㜤Ạᴴ 䞐ⵐ䢼 㫸䚽                                tmpfs[8]㜄㉐ ㏘㞅㢨 ⵐ㈑䚔 ⚀㢌 2㵜 㤴㣙㣙㾌 I/O㝴
+㩅㢨␘[11].                                                     ⽈⦑ 䑀㢰 㐐㏘䊐㢬 ext4㜄㉐㢌 2㵜 㤴㣙㣙㾌 I/O⪰
+ ὤ㦨㢌 ⽈⦑ 䑀㢰 㐐㏘䊐㡴 ⮈㢬 ⮈⯜⫠㜄 ⽸䚨 ⏄⫤                                ⽸Ẅ䚌㜠 tmpfs㜄㉐ ⵐ㈑䚌⏈ 㝘ⶸ䜘☐⪰ 䞉㢬䚌㜴␘.
+2㵜 㤴㣙㣙㾌㢌 ㉥⏙㡰⦐ 㢬䚨 ㉥⏙ 㤴䚌ᴴ ⵐ㈑䚌⮤,
+㢨⪰ Ἥ⸩䚌ὤ 㠸䚨 㫴㜤㘤ὤ㝴 ᵍ㡴 ὤ⏙㡸 㥐ḩ䚐␘.                                2. ⮈⯜⫠ 䑀㢰 㐐㏘䊐
+
+                                                              ⮈⯜⫠ 䑀㢰 㐐㏘䊐㡴 䑀㢰㡸 2㵜 㤴㣙㣙㾌㢌 ⽈⦑㢨
+→# ᘖῒ⯚# 㧶ሇ# ⪊ሆⱆគ⯲# ⹚⭪# +QR1# 5345344935,ᆖ# ⹚❷ᅗⲶ√⯲# ⹚⭪
+                                                             㙸␀ 䑀㢰 㿄㐐⦐ ⮈⯜⫠㜄 㤴㣙䚌⏈ 䑀㢰 㐐㏘䊐㢨␘.
+⯖ᳶ# ╊⩟⭪ㄶዊ⚺Ⴖ₶╆⩟# +43374577/# ✾Ṣ㝒WY# 513# ☦㦞㝒⮂⩎# 㦦᱅㢖,
+                                                             2㵜 㤴㣙㣙㾌 I/O⦐ 㢬䚨 ⵐ㈑䚌⏈ ㉥⏙㤴䚌ᴴ 㛺㛨
+⯖ᳶ# ⚲㨣ᢶ# ⪊ሆᅊᆖⰞ#
+                                                             ⬘㟤 ⾔⪬ ㉥⏙㡸 ⸨㢨㫴⬀ ⮈⯜⫠㢌 䡌ⵐ㉥㡰⦐ 㢬䚨
+
+
+
+
+                                              www.dbpia.co.kr
+                            2014년 한국컴퓨터종합학술대회 논문집
+
+
+             䚲 1 㔺䠮 䢮ἓ                                                   7
+                                                                         6
+
+
+
+
+                                                     Throughput (GB/s)
+ CPU         Intel Core i5-2400 3.10GHz                                  5
+                                                                         4
+                                                                         3
+ OS          Ubuntu kernel 3.11.4
+                                                                         2
+                                                                         1
+ Memory      4GB DRAM                                                    0
+                                                                                    read                  write            read                write
+ Secondary                                                                                  sequential                                random
+             256GB SSD
+ Storage                                                                                                 ext4 on SSD   tmpfs
+
+
+⦐Ἤ㝴 ᵍ㡴 㢸㐐䑀㢰㡸 㤴㣙䚌⏈ 㟝⓸⦐ ㇠㟝╌ᶤ⇌,                                                     ⁎⧮䝚 1. IOzone 1GB data set ㎇⓻ 䁷㩫
+⮈⯜⫠㜄 ⵤ䉤⫠⪰ 㻈ᴴ䚐 䝉䈐㢌 㐐㏘䊐㜄㉐ 䏭㍌䚐
+⯝㤵㡰⦐ ㇠㟝╌㛨 㞈␘. 㺐ἰ ⽸ 䡌ⵐ㉥ ⮈⯜⫠㜄 ␴䚐                                           700
+                                                                         600
+㜤Ạᴴ 䞐ⵐ䢼 㫸䚽 ╜㜄 ♤⢰ ⮈⯜⫠ 䑀㢰 㐐㏘䊐㢨
+
+
+
+                                                     Throughput (MB/s)
+                                                                         500
+⴬⣌㢌 䑀㢰 㐐㏘䊐㡰⦐ 㨰⯝ ⵏḔ 㢼㡰⮤, 㢨㜄 ♤⪬                                            400
+MRAMFS, BPFS, SCMFS, PMFS㝴 ᵍ㡴 ㇼ⦐㟨 䑀㢰                                     300
+㐐㏘䊐㢨 ᵐⵐ╌Ḕ 㢼␘[3,4,5,6].                                                   200
+
+  䚌㫴⬀ ⮈⯜⫠㢌 㟝⣽㡴 2㵜 㤴㣙㣙㾌㜄 ⽸䚨 㣅㙸㉐                                           100
+                                                                             0
+䑀㢰 㐐㏘䊐㢨 ㇠㟝䚌ὤ㜄⏈ ⺴㦥䚌␘. ⮈⯜⫠⏈ 㫴⇐                                                         read                  write               read            write
+30≸┍㙼 ⵈ㢨䏬␭ ᴴᷝ㢨 150⬀ⵤ ⛜㛨㦀㡰⇌, HDD⏈                                                             sequential                               random
+ᵍ㡴 ὤᴸ ┍㙼 6000⬀ⵤ ⛜㛨㦀␘[7]. 䜸㣠 ⮈⯜⫠㢌                                                                         ext4 on SSD   tmpfs
+㟝⣽ ␴⽸ ᴴᷝ㡴 HDD㜄 ⽸䚨 100ⵤ 㢨ㇵ ⽸㐬⮤,
+HDD ⵃ ␘⪬ 2㵜 㤴㣙㣙㾌㢌 ᴴᷝ 㤴䚌 ㋁⓸⏈                                                      ⁎⧮䝚 2. IOzone 5GB data set ㎇⓻ 䁷㩫
+⮈⯜⫠㜄 ⽸䚨 ⒈ ⾔⪨␘.                                     ⮈⯜⫠ ㉥⏙㜄 㢌䚨 ⬘㟤 ⾔⪬ ㉥⏙㡸 ⸨㢬␘. tmpfs⏈
+  ♤⢰㉐ ⮈⯜⫠ 䑀㢰 㐐㏘䊐㡴 ⺴㦥䚐 ⮈⯜⫠ 㟝⣽㡸                      㘤ὤ ┍㣅 ㍌䚽 㐐 ext4㜄 ⽸䚨 㺐␴ 15ⵤ ⾔⪬ ㉥⏙㡸
+㫴㠄䚌ὤ 㠸䚐 2㵜 㤴㣙㣙㾌⦐㢌 䞉㣙㢨 䙸㟈䚌␘.                        ⸨㢨⮤, 㢱ὤ ┍㣅㡴 ┍㢰䚐 䓌㢨㫴 㿄㐐㜄㉐ ┍㣅㡸
+ὤ㦨㢌      㟨㜵㷨㥐⏈       ᴴㇵ⮈⯜⫠ㇵ㢌     ⺴㦥䚐               ㍌䚽䚌ὤ ⚀ⱬ㜄 ㉥⏙ 㵜㢨ᴴ 㛺␘.
+Ɒ⫠⮈⯜⫠⪰ 㫴㠄䚌ὤ 㠸䚨 2㵜 㤴㣙㣙㾌⦐㢌 ㏘㞅㡸                         Ἤ⣌䘸 2⏈ 5GB㢌 ⒤㢨䉤⦐ 㐘䜌䚐 ᷤḰ⦐, ⮈⯜⫠
+㇠㟝䚨 㞈㡰⮤, 㢨⪰ ⮈⯜⫠ 䑀㢰 㐐㏘䊐㜄 㤵㟝䚔 ㍌                      㟝⣽⸨␘ 䆤 㐘䜌㦤ᶨ㡰⦐ 㢬䚨 tmpfs㜄㉐ ㏘㞅㢨
+㢼␘.                                                ⵐ㈑䚐␘. tmpfs⏈ 㜤㋁㤵 㘤ὤ ┍㣅㜄㉐ 㸼ὤ ⽸㛨
+  ⸬ ⊰ⱬ㜄㉐⏈ ⮈⯜⫠ 䑀㢰 㐐㏘䊐㡰⦐ ⫠⌹㏘㢌                        㢼⏈ ⮈⯜⫠ ḩᴸ㡰⦐ 㢬䚨 ㉥⏙㢨 㦿᷀ ⇌㝘⏈ ᶷ㡸
+㢸㐐 䑀㢰 㐐㏘䊐㢬 tmpfs⪰ ㇠㟝䚌㜴␘. tmpfs⏈ ḩ㡔                 㥐㞬䚌Ḕ ext4㜄 ⽸䚨 ㉥⏙㢨 㙼 㦿᷀ ⇌㝜␘. 㢨⏈
+⮈⯜⫠㜵㜡㡸 ㇠㟝䚌㜠 䓌㢨㫴 㿄㐐㜄 䑀㢰㡸 ⸨Ḵ䚌⮤,                      tmpfs㢌 ㏘㞅 Ḱ㥉㜄㉐ ⺼䙸㟈䚐 SSD I/Oᴴ ⵐ㈑䚌㜠
+㟨㜵㷨㥐㢌 ㏘㞅㡸 䋩䚨 2㵜 㤴㣙㣙㾌⦐㢌 䞉㣙㡸                         ㉥⏙㡸 㤴䚌㐐䇘ὤ ⚀ⱬ㢨␘.
+㫴㠄䚐␘. tmpfs⏈ ㏘㞅㢨 ⵐ㈑䚌㫴 㙾㡸 ⚀ ⮈⯜⫠
+㉥⏙㜄 㢌䚨 ⬘㟤 㦿㡴 ㉥⏙㡸 ⸨㢨㫴⬀, ㏘㞅㢨                         3. I/O ⺸㉑㡸 䋩䚐 ㉥⏙ 㤴䚌 㟈㢬 ⺸㉑
+ⵐ㈑䚌⮨ ㉥⏙㢨 Ἵᷝ䢼 ⛜㛨㫸␘. 㢨⏈ ␘㢀 㣙㢌
+㐘䜌㡸 䋩䚨 䞉㢬䚨 ⸰ ᶷ㢨␘.                                    㚒㉔ 㐘䜌㜄㉐ ㏘㞅㢨 ⵐ㈑ 䚔 ⚀ tmpfs㢌 ㉥⏙㢨
+                                                   Ἵᷝ䢼 㤴䚌╌⏈ ᶷ㡸 䞉㢬 䚌㜴㡰⮤, 㢨⪰ 䞉㢬 䚌ὤ
+2.1. ⮈⯜⫠ 䑀㢰 㐐㏘䊐㢌 ㉥⏙                                㠸䚨 㐘㥐 䀘≄㜄㉐ ⽈⦑ I/Oᴴ ⵐ㈑䚌⏈ ⺴⺸㡸
+                                                   ㍌㥉䚌㜠 ⷘ㾌⫼䆠ᴴ ┍㣅䚌⏈ ┍㙼 ⵐ㈑䚌⏈ I/O⪰
+  㐘䜌㡸 㠸䚨 䖐 1Ḱ ᵍ㡴 䞌ᷱ㜄㉐ ⫼㢨䆠⦐                         ὤ⦑䚌㜴␘.
+ⷘ㾌⫼䆠㢬     IOzone㢌 㜤㋁㤵 㢱ὤ/㘤ὤ, ⣐⒘                      Ἤ⣌䘸 3㡴 IOzone 1GB ⒤㢨䉤 㐘䜌 ᷤḰ⦐, ext4㢌
+㢱ὤ/㘤ὤ ┍㣅㡸 ㍌䚽䚌㜠 ㉥⏙㡸 㽕㥉䚌㜴␘. tmpfs㢌                   write㜄㉐ ⵐ㈑䚌⏈ SSD 㘤ὤ⪰ 㥐㞬䚌Ḕ⏈ SSD I/Oᴴ
+㉥⏙㡸 ⽸Ẅ䚌ὤ 㠸䚨 ext4⪰ ㇠㟝䚌㜴㡰⮤ 䜸㣠                        ᶤ㢌 ⵐ㈑䚌㫴 㙾⏈␘. 㢨⏈ Ἤ⣌䘸 1㢌 㐘䜌㜄㉐
+tmpfs⏈ 㐔⧤㉥ ⸨㣙㡸 㠸䚐 ⯜◼㢨 㛺ὤ ⚀ⱬ㜄                       ext4㢌 㘤ὤ ┍㣅㜄㉐⬀ tmpfs㜄 ⽸䚨 ㉥⏙㢨 㙼 㦿㡴
+ext4⏈ 㤴≄⫵㢨 㛺⏈ 㦤ᶨ㡰⦐ 㐘䜌㡸 㫸䚽 䚌㜴␘.                     ᶷ㡸 㫑⮹䚨 㨴␘. ext4⏈ ⽈⦑ 䑀㢰 㐐㏘䊐㡰⦐ 䑀㢰㜄
+  Ἤ⣌䘸 1㡴 1GB㢌 ⒤㢨䉤⦐ 㐘䜌䚐 ᷤḰ㢨␘.                       㘤㜠㫸 ⇨㟝㡴 2㵜 㤴㣙㣙㾌㜄 ⵌ㜵㢨 ╌㛨㚰 䚌⳴⦐
+tmpfs⏈ 1GB㢌 㐘䜌㜄㉐⏈ ㏘㞅㢨 ⵐ㈑䚌㫴 㙾㙸㉐                     SSD 㘤ὤᴴ ⵌ☐㐐 ⵐ㈑䚐␘. tmpfs⏈ 䓌㢨㫴 㿄㐐
+
+
+
+
+                                          www.dbpia.co.kr
+                                                                                                                     2014년 한국컴퓨터종합학술대회 논문집
+
+
+                                                                                                                                                        ⮈⯜⫠⦐ 㢱⏈ ㏘㞅 ┍㣅㜄 㢌䚨 ⵐ㈑䚌᷀ ═␘. 㢨⏈
+                        0.3                                                                                                                             ⮈⯜⫠ 䑀㢰 㐐㏘䊐㢌 䓌㢨㫴⪰ 㠸䚐 ㇼ⦐㟨 ㏘㞅
+                                                                                                                                                        ⮈䀘⏼㫌㡸 㤵㟝䚌㜠 䚨ᷤ䚔 ㍌ 㢼㡸 ᶷ 㢨␘.
+ I/O count (millions)
+
+
+
+
+                        0.2
+
+                                                                                                                                                        4. ᷤ⦔ ⵃ 䛙䟸 㜤Ạ
+                        0.1
+
+
+                            0                                                                                                                             ⸬ ⊰ⱬ㜄㉐⏈ ⮈⯜⫠ 䑀㢰 㐐㏘䊐㜄㉐ ㏘㞅㢨
+                                       #RD_SSD
+
+
+
+
+                                                                      #RD_SSD
+
+
+
+
+                                                                                                           #RD_SSD
+
+
+
+
+                                                                                                                                   #RD_SSD
+                                                      #WR_SSD
+
+
+
+
+                                                                                       #WR_SSD
+
+
+
+
+                                                                                                                       #WR_SSD
+
+
+
+
+                                                                                                                                              #WR_SSD
+                                                                                                                                                        ⵐ㈑䚔 ⚀㢌 ㉥⏙㤴䚌㝴 㢨⚀ ⵐ㈑䚌⏈ 2㵜 㤴㣙㣙㾌
+                                                                                                                                                        I/O⪰ ⫼㢨䆠⦐ ⷘ㾌⫼䆠㢬      IOzone㡸 ㇠㟝䚌㜠
+                                 Sequential read                 Sequential write                    Random read                 Random write
+                                                                                                                                                        䞉㢬䚌㜴␘. 㢨⪰ ⵈ䈉㡰⦐ IOzone㢌 ᴵ ┍㣅㜄㉐
+                                                                                ext4             tmpfs
+                                                                                                                                                        ⵐ㈑䚌⏈ ㉥⏙ 㤴䚌 㟈㢬㡸 䞉㢬 䚌㜴Ḕ ᵐ㉔ ⵝ䛙㡸
+                                                                                                                                                        㥐㐐 䚌㜴␘. 䛙䟸 㜤Ạ㜄㉐⏈ ⸬ ⊰ⱬ㜄㉐ 㵲㡴
+                                ⁎⧮䝚 3. IOzone 1GB data set SSD I/O                                                                                      ⺼䙸㟈䚐 2㵜 㤴㣙㣙㾌(SSD) I/O⪰ 㥐ᶤ䚌㜠 ㏘㞅㢨
+                                                                                                                                                        ⵐ㈑䚔 ⚀㢌 ⮈⯜⫠ 䑀㢰 㐐㏘䊐㢌 ㉥⏙㡸 ⽈⦑ 䑀㢰
+                        4                                                                                                                               㐐㏘䊐㜄 ␴☥䚌⓸⦑ Ạ䜸䚔 㜼㥉㢨␘.
+ I/O count (millions)
+
+
+
+
+                        3
+                                                                                                                                                        5. 㵬Ḕ ⱬ䜀
+                        2
+
+                        1                                                                                                                               [1] Driskill-Smith. Latest Advances and Future
+                        0                                                                                                                                   Prospects of STT-RAM. In Proceedings of Non-
+                                  #RD_SSD
+
+
+
+
+                                                                  #RD_SSD
+
+
+
+
+                                                                                                         #RD_SSD
+
+
+
+
+                                                                                                                                  #RD_SSD
+                                                 #WR_SSD
+
+
+
+
+                                                                                   #WR_SSD
+
+
+
+
+                                                                                                                      #WR_SSD
+
+
+
+
+                                                                                                                                              #WR_SSD
+
+
+
+
+                                                                                                                                                            Volatile Memories Workshop(NVMW' 10). 2010.
+                                                                                                                                                        [2] K. Bailey, L. Ceze, S. D. Gribble, and H. M. Levy.
+                                Sequential read                 Sequential write                     Random read                 Random write
+                                                                                                                                                            Operating system implications of fast, cheap,
+                                                                                ext4             tmpfs
+                                                                                                                                                            non-volatile memory, HotOS-13, 2011.
+                                                                                                                                                        [3] Jeremy      Condit,   Edmund        B.   Nightingale,
+                                ⁎⧮䝚 4. IOzone 5GB data set SSD I/O                                                                                          Christopher Frost, Engin Ipek, Benjamin C. Lee,
+                                                                                                                                                            Doug Burger, and Derrick Coetzee. Better I/O
+⇨㜄㉐⬀ 㢱ὤ/㘤ὤ ┍㣅㡸 ㍌䚽䚌㜠 SSD I/Oᴴ                                                                                                                                Through Byte-Addressable, Persistent Memory.
+ⵐ㈑䚌㫴 㙾⏈ ᶷ㡸 䞉㢬 䚔 ㍌ 㢼␘.                                                                                                                                       SOSP, 2009.
+  Ἤ⣌䘸 4⏈ 5GB ⒤㢨䉤⦐ 㐘䜌䚐 ᷤḰ⦐, ㏘㞅㢨                                                                                                                          [4] X. Wu and A. L. N. Reddy, SCMFS: A file system
+ⵐ㈑䚌㜠 tmpfs㜄㉐ SSD I/Oᴴ ⵐ㈑䚌⏈ ᶷ㡸 䞉㢬 䚔                                                                                                                          for storage class memory, SC, 2011.
+㍌ 㢼␘. ext4㜄 ⽸䚨 tmpfs㢌 SSD I/Oᴴ ⬂㢨                                                                                                                       [5] N. K. Edel, D. Tuteja, E. L. Miller, and S. A. Brandt,
+ⵐ㈑䚌⏈ ┍㣅☘㢨 㢼㡰⮤ 㻈ᴴ㤵㡰⦐ ⵐ㈑䚌⏈ SSD                                                                                                                                MRAMFS: A compressing file system for non-
+I/O㜄 㢌䚨 tmpfs㢌 ㉥⏙㢨 㤴䚌═␘.                                                                                                                                    volatile RAM, MASCOTS, 2004.
+  ext4㜄 ⽸䚨 tmpfs㜄㉐ 㻈ᴴ㤵㡰⦐ ⵐ㈑䚌⏈ I/O⏈                                                                                                                      [6] PMFS: Persistent memory file system, [online]
+3ᴴ㫴⦐ ⺸⪌䚔 ㍌ 㢼␘. 1) 㢱ὤ ┍㣅 ㍌䚽 㐐 SSD                                                                                                                            https://github.com/linux-pmfs/pmfs/.
+㘤ὤ ⵐ㈑, 2) ⣐⒘ 㘤ὤ ┍㣅 ㍌䚽 㐐 SSD 㢱ὤ ⵐ㈑,                                                                                                                      [7] J. C. McCallum. Market price survey. [online]
+3) ⣐⒘ 㢱ὤ ┍㣅 ㍌䚽 㐐 㻈ᴴ㤵㢬 SSD 㢱ὤ ⵐ㈑.                                                                                                                            http://www.jcmit.com/.
+  㢱ὤ ┍㣅㜄㉐ ⵐ㈑䚌⏈ SSD 㘤ὤ㢌 ᷱ㟤 Ḵ⥜                                                                                                                            [8] Peter Snyder, tmpfs: A Virtual Memory File System.
+㜤Ạ[10]㜄㉐ 㥐㙼䚐 tmpfs 䓌㢨㫴⪰ ㍌㥉(modified)                                                                                                                        Proceedings of the autumn 1990 EUUG
+❄⏈ ⽸㍌㥉(clean)㡰⦐ Ạ⺸䚌㜠 䚨ᷤ 䚔 ㍌ 㢼㡸                                                                                                                              Conference, pp. 241-248, October 1990.
+ᶷ㡰⦐ 㜼ㇵ═␘. ⣐⒘ 㘤ὤ ┍㣅㜄㉐ ⵐ㈑䚌⏈ SSD                                                                                                                           [9] W. D. Norcott. IOzone filesystem benchmark.
+㢱ὤ㢌 ᷱ㟤 ㏘㞅═ 䓌㢨㫴⪰ 㘤ὤ ┍㣅㡸 㠸䚨                                                                                                                                   [online] http://www.iozone.org/.
+⮈⯜⫠⦐ 㢱⏈ Ḱ㥉㜄㉐ ⵐ㈑䚌⮤, 㜤㋁㤵 㘤ὤ┍㣅㡴                                                                                                                            [10]     Joonwook Ahn, Jungsik Choi, Hwansoo Han,
+䑀㢰㡸 ㈑㉥䚌⏈ Ḱ㥉㢨ὤ ⚀ⱬ㜄 ㏘㞅╌㛨 㢼⏈                                                                                                                                   Swap behavior for NVRAM file system, KCC 2013.
+䓌㢨㫴ᴴ 㛺㛨㉐ SSD 㢱ὤᴴ ⵐ㈑䚌㫴 㙾⏈␘. 㢨⏈                                                                                                                           [11]     Hyunjun Kim, Joonwook Ahn, Sungtae Ryu,
+㘤ὤ┍㣅㡸 ㍌䚽 䚔 ⚀ ㇼ⦐㟨 䓌㢨㫴⪰ 䚔␭䚜㡰⦐㒜                                                                                                                                Jungsik Choi, Hwansoo Han, In-Memory File
+⺼䙸㟈䚐 SSD 㢱ὤ⪰ 㥐ᶤ 䚔 ㍌ 㢼㡸 ᶷ㢨␘. ❄䚐                                                                                                                              System for Non-Volatile Memory, RACS 2013
+⣐⒘ 㢱ὤ ┍㣅㜄㉐ ext4㜄 ⽸䚨 ⬂㢨 ⵐ㈑䚌⏈ SSD
+㢱ὤ㢌 ᷱ㟤, ㏘㞅╌㛨 㢼⏈ 㜠⤠ ᵐ㢌 䓌㢨㫴⪰ 䚐ⶼ㜄
+
+
+
+
+                                                                                                                                             www.dbpia.co.kr
+
